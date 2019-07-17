@@ -1,0 +1,134 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: single-app
+  datasource:
+    url: jdbc:mysql://192.168.0.15:30000/single?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    #    url: jdbc:mysql://111.230.198.244:3306/dkcs?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    #    username: root
+    #    password: Ygg168@2018
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      maximum-pool-size: 80
+      max-lifetime: 18000
+      idle-timeout: 3000
+      connection-timeout: 2000
+      connection-test-query: select 1
+      driver-class-name: com.mysql.jdbc.Driver
+      minimum-idle: 10
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  #    serialization:
+  #      write-dates-as-timestamps: true
+  aop:
+    proxy-target-class: true
+  redis:
+    #    host: 111.230.198.244
+    host: 192.168.0.15
+    password:
+    port: 31444
+    timeout: 1800ms
+    jedis:
+      pool:
+        max-active: 100
+        max-idle: 100
+        min-idle: 20
+        max-wait: 1000ms
+  rabbitmq:
+    host: 192.168.0.15
+    port: 30001
+    username: root
+    password: 123456
+  #服务配置
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+swagger:
+  show: true
+#mybaits-plus配置，修改主键类型，mapper.xml、type 别名等
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  typeAliasesPackage: com.ygg.wx.admin.model.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    log-prefix: db.
+
+server:
+  port: 8024
+  #  port: 8670
+  #  tomcat:
+  #    uri-encoding: UTF-8
+  origin-host: '*'
+  servlet:
+    context-path: /debt
+  undertow:
+    io-threads: 16
+    worker-threads: 256
+    buffer-size: 1024
+    direct-buffers: true
+wx:
+  url: https://domain.com
+  access-token-url: https://api.weixin.qq.com/cgi-bin/token
+  ticket-url: https://api.weixin.qq.com/cgi-bin/ticket/getticket
+  app-id: wx16a52d931f9cb9e7
+  app-secret: 123456
+ignore:
+  urls:
+    - /sub/**
+    - /swagger-resources/**
+    - /swagger-ui.html
+    - /v2/api-docs
+    - /swagger/api-docs
+    - /webjars/**
+    - /appVersion/**
+    - /tAppUser/captcha
+    - /tAppUser/login
+##log
+---
+spring:
+  profiles: dev
+logging:
+  config: classpath:logback-spring.xml
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://mysql.default:3306/single?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+  redis:
+    host: redis-cluster-master
+    port: 6379
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+payserver:
+  url: http://pay-server:8060/cost/yop
+logging:
+  config: classpath:logback-spring.xml
+  #payserver:
+  ##  url: http://193.112.137.159:8060/yop
+---
+spring:
+  profiles: prod
+  application:
+    name: single-appv1
+swagger:
+  show: false

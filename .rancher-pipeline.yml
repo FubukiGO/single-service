@@ -1,0 +1,26 @@
+stages:
+- name: compile
+  steps:
+  - runScriptConfig:
+      image: registry.cn-qingdao.aliyuncs.com/produce/maven:latest
+      shellScript: mvn clean package -Dmaven.test.skip=true
+- name: package
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./single-admin/Dockerfile
+      buildContext: .
+      tag: single-test/single-admin:${CICD_EXECUTION_SEQUENCE}
+      pushRemote: true
+      registry: registry.cn-qingdao.aliyuncs.com
+  - publishImageConfig:
+      dockerfilePath: ./single-app/Dockerfile
+      buildContext: .
+      tag: single-test/single-app:${CICD_EXECUTION_SEQUENCE}
+      pushRemote: true
+      registry: registry.cn-qingdao.aliyuncs.com
+- name: deploy
+  steps:
+  - applyYamlConfig:
+      path: ./deployment.yml
+timeout: 60
+

@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: single-app-test
+  namespace: single
+  labels:
+    app: single-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: single-app
+  template:
+    metadata:
+      labels:
+        app: single-app
+    spec:
+      containers:
+        - name: single-app
+          image: registry.cn-qingdao.aliyuncs.com/single-test/single-app:${CICD_EXECUTION_SEQUENCE}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /debt/health
+              port: 8024
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /debt/health
+              port: 8024
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 2
+            successThreshold: 2
+            timeoutSeconds: 2
+          ports:
+            - containerPort: 8024
+          volumeMounts:
+            - mountPath: /Users/akhan/Documents/IdeaProject/single
+              name: logs-cache
+      volumes:
+        - name: logs-cache
+          persistentVolumeClaim:
+            claimName: single-logs-storage
+      imagePullSecrets:
+        - name: aliyun
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: single-admin-test
+  namespace: single
+  labels:
+    app: single-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: single-admin
+  template:
+    metadata:
+      labels:
+        app: single-admin
+    spec:
+      containers:
+        - name: single-admin
+          image: registry.cn-qingdao.aliyuncs.com/single-test/single-admin:${CICD_EXECUTION_SEQUENCE}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /debt/health
+              port: 8025
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 2
+            successThreshold: 1
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /debt/health
+              port: 8025
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 2
+            successThreshold: 2
+            timeoutSeconds: 2
+          ports:
+            - containerPort: 8025
+          volumeMounts:
+            - mountPath: /Users/akhan/Documents/IdeaProject/single
+              name: logs-cache
+      volumes:
+        - name: logs-cache
+          persistentVolumeClaim:
+            claimName: single-logs-storage
+      imagePullSecrets:
+        - name: aliyun

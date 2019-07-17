@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ygg.debt.admin.mapper.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ygg.debt.admin.model.dto.SysRoleDto">
+        <id column="roleId" property="roleId"/>
+        <result column="roleName" property="roleName"/>
+        <result column="roleCode" property="roleCode"/>
+        <result column="roleDesc" property="roleDesc"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="delFlag" property="delFlag"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sr.role_id AS roleId,
+        sr.role_name AS roleName,
+        sr.role_code AS roleCode,
+        sr.role_desc AS roleDesc,
+        sr.create_time AS createTime,
+        sr.modified_time AS modifiedTime,
+        sr.del_flag AS delFlag,
+        sr.remark as remark
+    </sql>
+
+
+    <select id="findPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,su.username as creatorName
+        from
+        sys_role sr
+        left join sys_user su on su.user_id = sr.ins_user_id
+        <where>
+            <if test="n.del_flag != null and n.del_flag != ''">
+                sr.del_flag = #{n.del_flag}
+            </if>
+            <if test="n.roleName != null and n.roleName != ''">
+                and sr.role_name = #{n.roleName}
+            </if>
+            <if test="n.beginTime != null and n.beginTime != '' and n.endTime != null and n.endTime != ''">
+                and sr.create_time between #{n.beginTime} and DATE_ADD(#{n.endTime}, INTERVAL 1 DAY)
+            </if>
+        </where>
+    </select>
+
+    <select id="findRoleByUserId" resultType="com.ygg.debt.admin.model.entity.SysRole">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role sr
+        left join sys_user_role sur on sur.role_id = sr.role_id
+        where sur.user_id = #{userid}
+    </select>
+
+    <select id="beforeDelete" resultType="int">
+        select count(0)
+        from sys_user su
+                 left join sys_user_role sur on sur.user_id = su.user_id
+                 left join sys_role sr on sur.role_id = sr.role_id
+        where sr.role_id = #{roleId}
+          and su.del_flag = 0
+    </select>
+</mapper>

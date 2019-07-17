@@ -1,0 +1,25 @@
+version: '2'
+services:
+  single-app:
+    hostname: single-app
+    image: single-app
+    build:
+      context: ./
+      dockerfile: ./single-app/Dockerfile
+    volumes:
+      - /home/application/single/logs/:/Users/akhan/Documents/IdeaProject/single
+    restart: always
+    ports:
+      - 8024:8124
+
+  single-admin:
+    hostname: single-admin
+    image: single-admin
+    build:
+      context: ./
+      dockerfile: ./single-admin/Dockerfile
+    volumes:
+      - /home/application/single/logs/:/Users/akhan/Documents/IdeaProject/single
+    restart: always
+    ports:
+      - 8025:8125

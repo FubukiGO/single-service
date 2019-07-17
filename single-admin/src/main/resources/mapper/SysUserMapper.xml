@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ygg.debt.admin.mapper.SysUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ygg.debt.admin.model.entity.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="real_name" property="realName"/>
+        <result column="job_number" property="jobNumber"/>
+        <result column="mail" property="mail"/>
+        <result column="sex" property="sex"/>
+        <result column="status" property="status"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- userVo结果集 -->
+    <resultMap id="userResultMap" type="com.ygg.debt.admin.model.entity.User">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="mail" property="mail"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="status" property="status"/>
+        <result column="real_name" property="realName"/>
+        <result column="job_number" property="jobNumber"/>
+        <result column="ucreate_time" property="createTime"/>
+        <result column="umodified_time" property="updateTime"/>
+        <result column="udel_flag" property="delFlag"/>
+        <result column="deptId" property="deptId"/>
+        <result column="deptName" property="deptName"/>
+        <collection property="roleList" ofType="com.ygg.debt.admin.model.entity.SysRole">
+            <id column="role_id" property="roleId"/>
+            <result column="role_name" property="roleName"/>
+            <result column="role_code" property="roleCode"/>
+            <result column="role_desc" property="roleDesc"/>
+            <result column="rcreate_time" property="createTime"/>
+            <result column="rmodified_time" property="modifiedTime"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id AS userId, username, password, real_name AS realName, job_number AS jobNumber, mail, sex, salt, status, last_login_time AS lastLoginTime, phone, avatar, dept_id AS deptId, create_time AS createTime, update_time AS updateTime, del_flag AS delFlag
+    </sql>
+
+
+    <sql id="selectUserVo">
+        SELECT `user`.user_id,
+               `user`.username,
+               `user`.`password`,
+               `user`.real_name,
+               `user`.remark,
+               `user`.mail,
+               `user`.status,
+               `user`.sex,
+               `user`.phone,
+               `user`.job_number,
+               `user`.avatar,
+               `user`.create_time AS ucreate_time,
+               `user`.modified_time AS umodified_time,
+               `user`.del_flag    AS udel_flag,
+               `user`.dept_name AS deptName,
+               r.role_id,
+               r.role_name,
+               r.role_code,
+               r.role_desc,
+               r.create_time      AS rcreate_time,
+               r.modified_time      AS rmodified_time
+        FROM sys_user AS `user`
+                 LEFT JOIN sys_user_role AS ur ON ur.user_id = `user`.user_id
+                 LEFT JOIN sys_role AS r ON r.role_id = ur.role_id
+    </sql>
+
+    <select id="selectUserByUsername" resultMap="userResultMap">
+        <include refid="selectUserVo"/>
+        WHERE `user`.username = #{username}
+        and `user`.status = 1
+        and `user`.del_flag = 0
+    </select>
+
+    <select id="selectUserByMobile" resultMap="userResultMap">
+        <include refid="selectUserVo"/>
+        WHERE `user`.phone = #{mobile}
+    </select>
+
+    <select id="selectUserPage" resultType="com.ygg.debt.admin.model.entity.User">
+      SELECT `user`.user_id,
+        `user`.username,
+        `user`.`password`,
+        `user`.real_name as realName,
+        `user`.remark,
+        `user`.mail,
+        `user`.status,
+        `user`.sex,
+        `user`.phone,
+        `user`.job_number as jobNumber,
+        `user`.avatar,
+        `user`.create_time AS createTime,
+        `user`.modified_time AS modifiedTime,
+        `user`.dept_name AS deptName,
+        su.username as creatorName
+        FROM sys_user AS `user`
+        LEFT JOIN sys_user_role AS ur ON ur.user_id = `user`.user_id
+        LEFT JOIN sys_role AS r ON r.role_id = ur.role_id
+        left join sys_user su on su.user_id = `user`.ins_user_id
+        <where>
+            <if test="n.del_flag != null and n.del_flag != ''">
+                `user`.del_flag = #{n.del_flag}
+            </if>
+            <if test="n.realName != null and n.realName != ''">
+                and `user`.real_name like concat('%', #{n.realName}, '%')
+            </if>
+            <if test="n.jobNumber != null and n.jobNumber != ''">
+                and `user`.job_number like concat('%', #{n.jobNumber}, '%')
+            </if>
+            <if test="n.deptName != null and n.deptName != ''">
+                and `user`.dept_name like concat('%', #{n.deptName}, '%')
+            </if>
+            <if test="n.beginTime != null and n.beginTime != '' and n.endTime != null and n.endTime != ''">
+                and `user`.create_time between #{n.beginTime} and DATE_ADD(#{n.endTime}, INTERVAL 1 DAY)
+            </if>
+            <if test="n.username != null and n.username != ''">
+                and `user`.username like concat('%', #{n.username}, '%')
+            </if>
+            <if test="n.phone != null and n.phone != ''">
+                and `user`.phone like concat('%', #{n.phone}, '%')
+            </if>
+            <if test="n.roleId != null and n.roleId != ''">
+                and ur.role_id = #{n.roleId}
+            </if>
+            <if test="n.status != null and n.status != ''">
+                and `user`.status = #{n.status}
+            </if>
+        </where>
+        group by `user`.user_id
+        order by createTime desc
+    </select>
+</mapper>

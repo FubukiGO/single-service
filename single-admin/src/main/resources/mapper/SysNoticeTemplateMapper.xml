@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ygg.debt.admin.mapper.SysNoticeTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ygg.debt.admin.model.entity.SysNoticeTemplate">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="type" property="type" />
+        <result column="sign" property="sign" />
+        <result column="title" property="title" />
+        <result column="status" property="status" />
+        <result column="content" property="content" />
+        <result column="remark" property="remark" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        snt.id as id,
+        snt.name as `name`,
+        snt.type as type,
+        snt.sign as sign,
+        snt.title as title,
+        snt.status as status,
+        snt.content as content,
+        snt.remark as remark,
+        snt.modified_time as modifiedTime,
+        snt.del_flag AS delFlag
+    </sql>
+
+    <select id="findPage" resultType="com.ygg.debt.admin.model.entity.SysNoticeTemplate">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_notice_template snt
+        <where>
+            <if test="n.type != null and n.type != ''">
+                snt.type = #{n.type}
+            </if>
+            <if test="n.sign != null and n.sign != ''">
+                and snt.sign = concat('%', #{n.sign}, '%')
+            </if>
+            <if test="n.del_flag != null and n.del_flag != ''">
+                and snt.del_flag = #{n.del_flag}
+            </if>
+            <if test="n.beginTime != null and n.beginTime != '' and n.endTime != null and n.endTime != ''">
+                and snt.modified_time between #{n.beginTime} and DATE_ADD(#{n.endTime}, INTERVAL 1 DAY)
+            </if>
+            <if test="n.status != null and n.status != ''">
+                and snt.status = #{n.status}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -7,7 +7,7 @@ import com.ygg.wx.admin.common.util.StringUtils;
 import com.ygg.wx.admin.model.dto.AuthUser;
 import com.ygg.wx.admin.service.ITAppUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

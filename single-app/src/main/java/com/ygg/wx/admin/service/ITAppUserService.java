@@ -1,6 +1,6 @@
 package com.ygg.wx.admin.service;
 
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ygg.wx.admin.model.entity.TAppUser;
 import com.ygg.wx.admin.model.vo.AppUserVo;
 import org.springframework.security.core.userdetails.UserDetailsService;

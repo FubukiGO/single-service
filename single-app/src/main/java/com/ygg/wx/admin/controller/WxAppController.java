@@ -1,8 +1,8 @@
 package com.ygg.wx.admin.controller;
 
+import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.xiaoleilu.hutool.http.HttpRequest;
 import com.ygg.debt.common.util.R;
 import com.ygg.wx.admin.config.WxSupportConfig;
 import io.swagger.annotations.Api;

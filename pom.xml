@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.2.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
     </parent>
 
     <modules>
@@ -22,76 +22,198 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <javadoc.version>3.0.0</javadoc.version>
-        <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <mysql-driver.version>8.0.11</mysql-driver.version>
-        <guava.version>21.0</guava.version>
+        <guava.version>28.0-jre</guava.version>
         <hibernate.validator.version>6.0.10.Final</hibernate.validator.version>
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
-        <mybatis.version>3.2.8</mybatis.version>
         <velocity-engine-core.version>2.0</velocity-engine-core.version>
-        <mybatis-plus.version>2.1.9</mybatis-plus.version>
-        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
-        <github.pagehelper.version>5.0.3</github.pagehelper.version>
-        <javax.persistence.version>1.0.2</javax.persistence.version>
-        <session.redis.version>2.0.2.RELEASE</session.redis.version>
+        <mybatis-plus.version>3.1.2</mybatis-plus.version>
         <fastjson.version>1.2.9</fastjson.version>
         <swagger.version>2.8.0</swagger.version>
         <commons-io.version>2.4</commons-io.version>
-        <hikaricp.version>3.2.0</hikaricp.version>
         <poi.version>3.8</poi.version>
         <swagger2.version>2.8.0</swagger2.version>
         <kaptcha.version>0.0.9</kaptcha.version>
         <jjwt.version>0.9.0</jjwt.version>
-        <!--Lombok-->
-        <lombok.version>1.18.8</lombok.version>
-        <hutool.version>3.3.2</hutool.version>
+        <hutool.version>4.5.16</hutool.version>
         <itext.version>5.5.13</itext.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- 依赖版本库 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
     <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                    <configuration>
+                        <finalName>${project.build.finalName}</finalName>
+                    </configuration>
                     <executions>
                         <execution>
                             <goals>
-                                <goal>build-info</goal>
+                                <goal>repackage</goal>
                             </goals>
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <target>${java.version}</target>
-                        <source>${java.version}</source>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${javadoc.version}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <target>${maven.compiler.target}</target>
+                    <source>${maven.compiler.source}</source>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.5</version>
+            </plugin>
+
+            <!-- 代码生成 -->
+            <plugin>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatisplus-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <!-- 输出目录(默认java.io.tmpdir) -->
+                    <outputDir>e:\cache</outputDir>
+                    <!-- 是否覆盖同名文件(默认false) -->
+                    <fileOverride>true</fileOverride>
+                    <!-- mapper.xml 中添加二级缓存配置(默认true) -->
+                    <enableCache>true</enableCache>
+                    <!-- 开发者名称 -->
+                    <author>Yanghu</author>
+                    <!-- 是否开启 ActiveRecord 模式(默认true) -->
+                    <activeRecord>false</activeRecord>
+                    <!-- 数据源配置，( **必配** ) -->
+                    <dataSource>
+                        <driverName>com.mysql.jdbc.Driver</driverName>
+                        <url>jdbc:mysql://192.168.0.15:30000/phoenix?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false</url>
+                        <username>root</username>
+                        <password>123456</password>
+                    </dataSource>
+                    <strategy>
+                        <!-- 字段生成策略，四种类型，从名称就能看出来含义：
+                            nochange(默认),
+                            underline_to_camel,(下划线转驼峰)
+                            remove_prefix,(去除第一个下划线的前部分，后面保持不变)
+                            remove_prefix_and_camel(去除第一个下划线的前部分，后面转驼峰) -->
+                        <naming>remove_prefix_and_camel</naming>
+                        <!-- 表前缀 -->
+                        <tablePrefix>t_</tablePrefix>
+                        <!--Entity中的ID生成策略（默认 id_worker）-->
+                        <idGenType>auto</idGenType>
+                        <!--自定义超类-->
+                        <!--<superServiceClass>com.baomidou.base.BaseService</superServiceClass>-->
+                        <!-- 要包含的表 与exclude 二选一配置-->
+                        <!--<include>-->
+                        <!--<property>sec_user</property>-->
+                        <!--<property>table1</property>-->
+                        <!--</include>-->
+                        <!-- 要排除的表 -->
+                        <!--<exclude>-->
+                        <!--<property>schema_version</property>-->
+                        <!--</exclude>-->
+                    </strategy>
+                    <packageInfo>
+                        <!-- 父级包名称，如果不写，下面的service等就需要写全包名(默认com.baomidou) -->
+                        <parent>com.baomidou</parent>
+                        <!--service包名(默认service)-->
+                        <service>service</service>
+                        <!--serviceImpl包名(默认service.impl)-->
+                        <serviceImpl>service.impl</serviceImpl>
+                        <!--entity包名(默认entity)-->
+                        <entity>entity</entity>
+                        <!--mapper包名(默认mapper)-->
+                        <mapper>mapper</mapper>
+                        <!--xml包名(默认mapper.xml)-->
+                        <xml>mapper.xml</xml>
+                    </packageInfo>
+                    <template>
+                        <!-- 定义controller模板的路径 -->
+                        <controller>/codegen-template/Controller.java.vm</controller>
+                        <service>/codegen-template/Service.java.vm</service>
+                        <serviceImpl>/codegen-template/ServiceImpl.java.vm</serviceImpl>
+
+                    </template>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
 
     <repositories>
+        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
         <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!--阿里云代理Spring 官方仓库-->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://maven.aliyun.com/repository/spring</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <pluginRepositories>
+        <!--阿里云代理Spring 插件仓库-->
         <pluginRepository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/libs-release</url>
+            <id>spring-plugin</id>
+            <name>spring-plugin</name>
+            <url>https://maven.aliyun.com/repository/spring-plugin</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 

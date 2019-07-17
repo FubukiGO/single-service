@@ -1,14 +1,16 @@
 package com.ygg.wx.admin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ygg.debt.common.constants.MqQueueConstant;
 import com.ygg.debt.common.model.dto.NoticeTemplateDto;
 import com.ygg.wx.admin.mapper.SysNoticeTemplateMapper;
 import com.ygg.wx.admin.mapper.TAppUserMapper;
 import com.ygg.wx.admin.model.entity.SysNoticeTemplate;
 import com.ygg.wx.admin.service.SysNoticeTemplateService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -32,20 +34,18 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class SysNoticeTemplateServiceImpl extends ServiceImpl<SysNoticeTemplateMapper, SysNoticeTemplate> implements SysNoticeTemplateService {
+
     private FastDateFormat fdf = FastDateFormat.getInstance("yyyy年MM月dd日 HH时mm分");
 
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    @Resource
-    private TAppUserMapper appUserMapper;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public Page<SysNoticeTemplate> findPage(Page<SysNoticeTemplate> page, Map param) {
-        return page.setRecords(baseMapper.findPage(page, param));
+    public IPage findPage(Page page, Map param) {
+        return baseMapper.findPage(page, param);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SysNoticeTemplateServiceImpl extends ServiceImpl<SysNoticeTemplateM
     @Override
     @Cacheable(value = "notice_template", key = "'template_' + #id")
     public SysNoticeTemplate findTemplateDetail(Integer id) {
-        return this.selectOne(new EntityWrapper<SysNoticeTemplate>().eq("del_flag", "0").eq("id", id));
+        return this.getOne(Wrappers.<SysNoticeTemplate>query().eq("del_flag", "0").eq("id", id));
     }
 
     /**

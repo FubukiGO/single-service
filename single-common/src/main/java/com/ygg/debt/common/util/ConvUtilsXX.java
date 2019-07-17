@@ -1,4 +1,4 @@
-package com.ygg.debt.admin.common.util;
+package com.ygg.debt.common.util;
 
 import org.springframework.util.StringUtils;
 

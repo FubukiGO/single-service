@@ -17,10 +17,11 @@
 
 package com.ygg.debt.common.interceptor;
 
-import com.baomidou.mybatisplus.plugins.SqlParserHandler;
-import com.baomidou.mybatisplus.toolkit.PluginUtils;
-import com.xiaoleilu.hutool.collection.CollectionUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
+import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -42,10 +43,11 @@ import java.util.Properties;
  */
 @Slf4j
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
-public class DataScopeInterceptor extends SqlParserHandler implements Interceptor {
+public class DataScopeInterceptor extends AbstractSqlParserHandler implements Interceptor {
 
     @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+    @SneakyThrows
+    public Object intercept(Invocation invocation) {
         StatementHandler statementHandler = (StatementHandler) PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
         this.sqlParser(metaObject);

@@ -90,11 +90,11 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
-            <version>${session.redis.version}</version>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.xiaoleilu</groupId>
+            <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
@@ -164,37 +164,12 @@
             <version>${mysql-driver.version}</version>
         </dependency>
 
-        <!--mybatis-plus-->
+        <!--mybatis-->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
-
-        <!-- mybatis-plus start -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>${mybatisplus-spring-boot-starter.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>tomcat-jdbc</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--myabtis-plus 代码生成依赖-->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-            <version>${velocity-engine-core.version}</version>
-        </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>de.codecentric</groupId>-->
-        <!--<artifactId>spring-boot-security-starter-client</artifactId>-->
-        <!--<version>${spring.boot.security.version}</version>-->
-        <!--</dependency>-->
 
         <!-- itext -->
         <dependency>
@@ -228,19 +203,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <version>${commons-codec.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
@@ -273,6 +242,7 @@
             <artifactId>bcmail-jdk15on</artifactId>
             <version>1.54</version>
         </dependency>
+
     </dependencies>
 
     <build>

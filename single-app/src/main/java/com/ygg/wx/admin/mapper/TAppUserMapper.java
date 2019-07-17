@@ -1,6 +1,6 @@
 package com.ygg.wx.admin.mapper;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ygg.wx.admin.model.dto.AuthUser;
 import com.ygg.wx.admin.model.entity.TAppUser;
 import org.apache.ibatis.annotations.Param;

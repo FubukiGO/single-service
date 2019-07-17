@@ -1,9 +1,9 @@
 package com.ygg.wx.admin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.xiaoleilu.hutool.date.DateField;
-import com.xiaoleilu.hutool.date.DateUtil;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ygg.debt.common.constants.CommonConstant;
 import com.ygg.debt.common.exception.AccountLockedExeption;
 import com.ygg.debt.common.exception.BusinessException;
@@ -13,16 +13,15 @@ import com.ygg.wx.admin.model.dto.AuthUser;
 import com.ygg.wx.admin.model.entity.TAppUser;
 import com.ygg.wx.admin.model.vo.AppUserVo;
 import com.ygg.wx.admin.service.ITAppUserService;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -35,18 +34,12 @@ import java.util.Date;
  */
 @Service
 @Slf4j
+@AllArgsConstructor
 public class TAppUserServiceImpl extends ServiceImpl<TAppUserMapper, TAppUser> implements ITAppUserService {
 
     private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
-
-    @Autowired
-    private JwtTokenUtils jwtTokenUtils;
-
-    @Resource
-    private TAppUserMapper tAppUserMapper;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final RedisTemplate redisTemplate;
 
     /**
      * @author akhan
@@ -70,7 +63,7 @@ public class TAppUserServiceImpl extends ServiceImpl<TAppUserMapper, TAppUser> i
         }
         TAppUser login = null;
         try {
-            login = this.selectOne(new EntityWrapper<TAppUser>().eq("phone", phone));
+            login = this.getOne(Wrappers.<TAppUser>query().eq("phone", phone));
         } catch (Exception e) {
             throw new BusinessException("系统异常");
         }
@@ -111,7 +104,8 @@ public class TAppUserServiceImpl extends ServiceImpl<TAppUserMapper, TAppUser> i
         login.setLastLoginTime(now);
         login.setLastLoginIp(ip);
         login.setCountErrorLogin(0);
-        tAppUserMapper.updateById(login);
+
+        updateById(login);
 
         AuthUser auth = new AuthUser();
         BeanUtils.copyProperties(login, auth);
@@ -124,10 +118,9 @@ public class TAppUserServiceImpl extends ServiceImpl<TAppUserMapper, TAppUser> i
 
     @Override
     public AppUserVo loginByCheckcode(String phone, String checkcode) {
-        TAppUser tAppUser1 = null;
-        TAppUser tAppUser = new TAppUser();
-        tAppUser.setPhone(phone);
-        tAppUser1 = tAppUserMapper.selectOne(tAppUser);
+
+        TAppUser tAppUser1 = this.getOne(Wrappers.<TAppUser>query().eq("phone", phone));
+
         if (null == tAppUser1) {
             throw new BusinessException("手机号未注册");
         }

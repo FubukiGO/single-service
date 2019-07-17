@@ -1,6 +1,6 @@
 package com.ygg.wx.admin.service.impl;
 
-import com.xiaoleilu.hutool.collection.CollectionUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.ygg.wx.admin.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

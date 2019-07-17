@@ -1,8 +1,9 @@
 package com.ygg.wx.admin.service;
 
 
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ygg.wx.admin.model.entity.SysNoticeTemplate;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public interface SysNoticeTemplateService extends IService<SysNoticeTemplate> {
 
-    Page<SysNoticeTemplate> findPage(Page<SysNoticeTemplate> page, Map param);
+    IPage findPage(Page page, Map param);
 
     SysNoticeTemplate findTemplateDetail(Integer id);
 

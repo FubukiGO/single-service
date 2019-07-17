@@ -1,4 +1,4 @@
-package com.ygg.wx.admin.common.util;
+package com.ygg.debt.common.util;
 
 import java.util.HashMap;
 import java.util.Iterator;

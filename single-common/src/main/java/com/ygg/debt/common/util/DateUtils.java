@@ -1,4 +1,4 @@
-package com.ygg.debt.admin.common.util;
+package com.ygg.debt.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

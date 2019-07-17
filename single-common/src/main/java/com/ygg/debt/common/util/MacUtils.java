@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.ygg.debt.admin.common.util;
+package com.ygg.debt.common.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

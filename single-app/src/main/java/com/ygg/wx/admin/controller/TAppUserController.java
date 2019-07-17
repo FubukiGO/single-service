@@ -9,11 +9,11 @@ import com.ygg.wx.admin.model.vo.AppUserVo;
 import com.ygg.wx.admin.service.ITAppUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -38,20 +38,15 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/tAppUser")
 @Api(description = "app用户操作", tags = "h5用户操作")
 @Slf4j
+@AllArgsConstructor
 public class TAppUserController extends BaseController {
 
     private static final String CAPTCHA_VERIFY = "captcha:verify:";
 
-    @Autowired
-    private CaptchaUtil captchaUtil;
-
-    @Autowired
-    private Producer producer;
-    @Autowired
-    private ITAppUserService iTAppUserService;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private final CaptchaUtil captchaUtil;
+    private final Producer producer;
+    private final ITAppUserService iTAppUserService;
+    private final RedisTemplate redisTemplate;
 
     @Value("${wx.invite_register_url}")
     private String inviteRegisterUrl;

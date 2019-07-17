@@ -1,7 +1,7 @@
 package com.ygg.wx.admin.common.util;
 
+import cn.hutool.http.HttpStatus;
 import com.google.code.kaptcha.Producer;
-import com.xiaoleilu.hutool.http.HttpStatus;
 import com.ygg.wx.admin.security.AuthManager;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

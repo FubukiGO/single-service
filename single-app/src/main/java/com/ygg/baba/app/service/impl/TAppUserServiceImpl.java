@@ -134,8 +134,6 @@ public class TAppUserServiceImpl extends ServiceImpl<TAppUserMapper, TAppUser> i
         userVo.setName(tAppUser1.getName());
         userVo.setBalance(tAppUser1.getBalance());
         userVo.setIsBindCard(tAppUser1.getIsBindCard());
-        userVo.setIsSetTranspwd(tAppUser1.getIsSetTranspwd());
-        userVo.setIsCompletion(tAppUser1.getIsCompletion());
 
         AuthUser login = new AuthUser();
         BeanUtils.copyProperties(tAppUser1, login);

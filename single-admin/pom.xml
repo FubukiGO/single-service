@@ -41,7 +41,7 @@
                 <configuration>
                     <fork>true</fork>
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
-                    <mainClass>com.ygg.debt.AdminApplication</mainClass>
+                    <mainClass>com.ygg.baba.AdminApplication</mainClass>
                     <outputDirectory>../target</outputDirectory>
                 </configuration>
             </plugin>

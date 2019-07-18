@@ -1,0 +1,119 @@
+/*
+ *    Copyright (c) 2018-2025, lengleng All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * Neither the name of the baba.com developer nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * Author: yukang (wzysz555@gmail.com)
+ */
+package ${cfg.package}.${cfg.moduleName}.entity;
+
+#if(${activeRecord})
+import com.baomidou.mybatisplus.activerecord.Model;
+#end
+#if(${idGenType}!="ID_WORKER")
+import com.baomidou.mybatisplus.enums.IdType;
+import com.baomidou.mybatisplus.annotations.TableId;
+#end
+import com.baomidou.mybatisplus.annotations.TableField;
+#if(${addTabeName})
+import com.baomidou.mybatisplus.annotations.TableName;
+#end
+import java.io.Serializable;
+#if(${table.hasDate})
+import java.util.Date;
+#end
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.math.BigDecimal;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+/**
+ * ${table.comment}
+ *
+ * @author ${cfg.author}
+ * @date ${cfg.datetime}
+ */
+@Data
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
+#if(${table.convert})
+@TableName("${table.name}")
+#end
+#if(${activeRecord})
+public class ${entity} extends Model<${entity}> {
+#else
+public class ${entity} implements Serializable {
+#end
+
+    private static final long serialVersionUID = 1L;
+
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+#if(${field.keyFlag})
+#set($keyPropertyName=${field.propertyName})
+#end
+#if("$!field.comment" != "")
+    /**
+     * ${field.comment}
+     */
+#end
+#if(${field.keyFlag})
+## 主键
+#if(${field.keyIdentityFlag})
+    @TableId(value = "${field.name}", type = IdType.AUTO)
+#elseif(!$null.isNull(${idType}) && "$!idType" != "")
+    @TableId(value = "${field.name}", type = IdType.${idType})
+#elseif(${field.convert})
+    @TableId("${field.name}")
+#end
+## 普通字段
+#elseif(${field.fill})
+## -----   存在字段填充设置   -----
+#if(${field.convert})
+    @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
+#else
+    @TableField(fill = FieldFill.${field.fill})
+#end
+#elseif(${field.convert})
+    @TableField("${field.name}")
+#end
+## 乐观锁注解
+#if(${versionFieldName}==${field.name})
+    @Version
+#end
+## 逻辑删除注解
+#if(${logicDeleteFieldName}==${field.name})
+    @TableLogic
+#end
+    private ${field.propertyType} ${field.propertyName};
+
+#end
+
+#if(${entityColumnConstant})
+#foreach($field in ${table.fields})
+    public static final String ${field.name.toUpperCase()} = "${field.name}";
+
+#end
+#end
+#if(${activeRecord})
+    @Override
+    protected Serializable pkVal() {
+#if(${keyPropertyName})
+        return this.${keyPropertyName};
+#else
+        return null;
+#end
+    }
+
+#end
+}

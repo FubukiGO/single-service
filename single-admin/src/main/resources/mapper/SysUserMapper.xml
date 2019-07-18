@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ygg.debt.admin.mapper.SysUserMapper">
+<mapper namespace="com.ygg.baba.admin.mapper.SysUserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ygg.debt.admin.model.entity.SysUser">
+    <resultMap id="BaseResultMap" type="com.ygg.baba.admin.model.entity.SysUser">
         <id column="user_id" property="userId"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
@@ -21,7 +21,7 @@
     </resultMap>
 
     <!-- userVo结果集 -->
-    <resultMap id="userResultMap" type="com.ygg.debt.admin.model.entity.User">
+    <resultMap id="userResultMap" type="com.ygg.baba.admin.model.entity.User">
         <id column="user_id" property="userId"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
@@ -38,7 +38,7 @@
         <result column="udel_flag" property="delFlag"/>
         <result column="deptId" property="deptId"/>
         <result column="deptName" property="deptName"/>
-        <collection property="roleList" ofType="com.ygg.debt.admin.model.entity.SysRole">
+        <collection property="roleList" ofType="com.ygg.baba.admin.model.entity.SysRole">
             <id column="role_id" property="roleId"/>
             <result column="role_name" property="roleName"/>
             <result column="role_code" property="roleCode"/>
@@ -93,7 +93,7 @@
         WHERE `user`.phone = #{mobile}
     </select>
 
-    <select id="selectUserPage" resultType="com.ygg.debt.admin.model.entity.User">
+    <select id="selectUserPage" resultType="com.ygg.baba.admin.model.entity.User">
       SELECT `user`.user_id,
         `user`.username,
         `user`.`password`,

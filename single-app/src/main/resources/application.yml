@@ -2,16 +2,16 @@ spring:
   profiles:
     active: dev
   application:
-    name: single-app
+    name: single-admin
   datasource:
-    url: jdbc:mysql://192.168.0.15:30000/single?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://192.168.0.15:30000/phoenix?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
     #    url: jdbc:mysql://111.230.198.244:3306/dkcs?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
     #    username: root
     #    password: Ygg168@2018
     type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 80
       max-lifetime: 18000
@@ -31,7 +31,7 @@ spring:
     #    host: 111.230.198.244
     host: 192.168.0.15
     password:
-    port: 31444
+    port: 32743
     timeout: 1800ms
     jedis:
       pool:
@@ -55,7 +55,7 @@ swagger:
 #mybaits-plus配置，修改主键类型，mapper.xml、type 别名等
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
-  typeAliasesPackage: com.ygg.wx.admin.model.entity
+  typeAliasesPackage: com.ygg.baba.admin.model.entity
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
     id-type: 0

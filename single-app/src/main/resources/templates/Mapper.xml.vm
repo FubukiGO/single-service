@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~
+  ~      Copyright (c) 2018-2025, lengleng All rights reserved.
+  ~
+  ~  Redistribution and use in source and binary forms, with or without
+  ~  modification, are permitted provided that the following conditions are met:
+  ~
+  ~ Redistributions of source code must retain the above copyright notice,
+  ~  this list of conditions and the following disclaimer.
+  ~  Redistributions in binary form must reproduce the above copyright
+  ~  notice, this list of conditions and the following disclaimer in the
+  ~  documentation and/or other materials provided with the distribution.
+  ~  Neither the name of the baba.com developer nor the names of its
+  ~  contributors may be used to endorse or promote products derived from
+  ~  this software without specific prior written permission.
+  ~  Author: yukang (wzysz555@gmail.com)
+  ~
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${cfg.package}.${cfg.moduleName}.mapper.${entity}Mapper">
+
+#if(${enableCache})
+    <!-- 开启二级缓存 -->
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+#end
+#if(${baseResultMap})
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
+#foreach($field in ${table.fields})
+#if(${field.keyFlag})##生成主键排在第一位
+        <id column="${field.name}" property="${field.propertyName}" />
+#end
+#end
+#foreach($field in ${table.commonFields})##生成公共字段
+        <result column="${field.name}" property="${field.propertyName}" />
+#end
+#foreach($field in ${table.fields})
+#if(!${field.keyFlag})##生成普通字段
+        <result column="${field.name}" property="${field.propertyName}" />
+#end
+#end
+    </resultMap>
+
+#end
+
+#if(${baseColumnList})
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+#foreach($field in ${table.commonFields})
+        ${field.name},
+#end
+        ${table.fieldNames}
+    </sql>
+
+#end
+
+    <!--${table.entityPath}简单分页查询-->
+    <select id="get${entity}Page" resultMap="${table.entityPath}Map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ${table.name}
+    <where>
+#foreach($field in ${table.fields})
+        <if test="n.${field.propertyName} != null and n.${field.propertyName}.trim() != ''">
+            AND ${field.name} = #{n.${field.propertyName}}
+        </if>
+#end
+    </where>
+    </select>
+
+</mapper>

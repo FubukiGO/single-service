@@ -171,6 +171,13 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
 
+        <!-- 阿里excel -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
         <!-- itext -->
         <dependency>
             <groupId>com.itextpdf</groupId>
